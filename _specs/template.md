@@ -1,0 +1,29 @@
+# Spec for <feature-name>
+
+branch: claude/feature/<feature-name>
+figma_component (if used): <figma-component-name>
+
+## Summary
+...
+
+# Functional Requirments
+- ...
+
+## Figma Design Reference (only if referenced)
+- File: ...
+- Component Name: ...
+- Key visual constraints: ...
+
+## Possible Edge Cases
+- ...
+
+## Acceptance Criteria
+- ...
+
+# Open Questions
+- ...
+
+## Testing Guidelines
+Create a tesf file(s) in the ./tests folder for the new feature, and create meaningful tests for the following cases,
+without going too heavy:
+- ...

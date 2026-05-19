@@ -1,0 +1,23 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "jq -r '.tool_input.file_path // .tool_response.filePath' | { read -r f; if [[ \"$f\" =~ \\.(ts|tsx|js|jsx|mjs)$ ]]; then npm run lint -- --fix \"$f\" 2>/dev/null; fi; }",
+            "statusMessage": "Formatting with ESLint...",
+            "timeout": 30
+          },
+          {
+            "type": "command",
+            "command": "jq -r '.tool_input.file_path // .tool_response.filePath' | { read -r f; if [[ \"$f\" =~ \\.(ts|tsx|js|jsx|test|spec)$ ]]; then npm run test -- \"$f\" 2>/dev/null || true; fi; }",
+            "statusMessage": "Running tests...",
+            "timeout": 60
+          }
+        ]
+      }
+    ]
+  }
+}
