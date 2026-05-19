@@ -1,56 +1,66 @@
 # Spec for Authentication Forms
 
 branch: claude/feature/authentication-forms
+figma_component (if used): N/A
 
 ## Summary
 
-Add reusable authentication forms to the `/login` and `/signup` pages. Each form will include email and password input fields, a password visibility toggle icon, and a form-specific submit button (Login/Sign Up). On submission, forms will log user input to the console for now. Users should be able to easily switch between login and signup modes.
+Add a reusable `AuthForm` component used by both the `/login` and `/signup` pages. The form includes an email field, a password field with a show/hide toggle icon, and a context-aware submit button. On submission the form logs the entered values to the browser console (placeholder for real auth logic). Each page includes a navigation link to the other, so users can easily switch between logging in and signing up.
 
-## Functional Requirements
+# Functional Requirements
 
-- **Email Field**: Text input for user email address
-- **Password Field**: Password input that hides characters by default
-- **Password Visibility Toggle**: Icon/button to show/hide password text
-- **Submit Button**: Form submission button with contextual label ("Log In" for login, "Sign Up" for signup)
-- **Console Logging**: On form submission, log email and password to the browser console (temporary, for development)
-- **Form Switching**: Users can navigate between `/login` and `/signup` pages to use different forms
-- **Form Reset**: Form fields clear after successful submission
-- **Single Component**: Create a reusable form component that handles both login and signup modes
+- **Email field**: Controlled text input, accepts any string, labelled "Email"
+- **Password field**: Controlled password input that masks characters by default, labelled "Password"
+- **Password visibility toggle**: Clickable icon (Eye / EyeOff from lucide-react) that toggles the password field between `type="password"` and `type="text"`
+- **Submit button**: Full-width button whose label reads "Log In" on `/login` and "Sign Up" on `/signup`
+- **Console logging on submit**: `console.log` the submitted email and password; prevent default browser form submission
+- **Form reset**: Clear both fields after the form is submitted
+- **Form switching link**: Each page shows a plain text link to the other page — `/login` shows "Don't have an account? Sign up", `/signup` shows "Already have an account? Log in"
+- **Reusable component**: A single `AuthForm` component accepts a `mode` prop (`"login"` | `"signup"`) to control button label and is used by both pages
+
+## Figma Design Reference (only if referenced)
+
+N/A — no Figma file provided. Style with existing Tailwind utility classes consistent with the rest of the project.
 
 ## Possible Edge Cases
 
-- User submits form with empty email or password fields
-- User toggles password visibility multiple times
-- Form submitted with password visibility toggle active
-- User navigates away and back to form (state preservation)
-- Very long email addresses or passwords
+- Form submitted with one or both fields empty
+- Whitespace-only values entered in either field
+- Password visibility toggled on, then form is submitted — values should still be logged and cleared
+- User clicks the toggle icon rapidly multiple times
+- Very long email or password strings (layout should not break)
+- User navigates away mid-entry and returns (fields reset, not preserved)
 
 ## Acceptance Criteria
 
-- [ ] Form component accepts a `mode` prop ("login" or "signup") to determine submit button text
-- [ ] Email and password input fields render correctly
-- [ ] Password visibility toggle icon displays and functions properly
-- [ ] Clicking submit button triggers form validation and console logging
-- [ ] Console output includes email and password values on submit
-- [ ] Form fields clear after submission
-- [ ] Both `/login` and `/signup` pages render the form component with correct mode
-- [ ] Form is styled consistently and responsive on mobile/tablet/desktop
+- [ ] `AuthForm` component accepts a `mode` prop of `"login"` or `"signup"`
+- [ ] Email input is rendered with a visible label and correct `type="email"` or `type="text"` attribute
+- [ ] Password input renders masked by default (`type="password"`)
+- [ ] Password visibility toggle icon is visible and accessible (keyboard-clickable)
+- [ ] Clicking the toggle switches password field between masked and plain text
+- [ ] Submitting the form calls `console.log` with the entered email and password values
+- [ ] Default form submission (page reload) is prevented
+- [ ] Both fields are cleared after submission
+- [ ] Submit button reads "Log In" when `mode="login"` and "Sign Up" when `mode="signup"`
+- [ ] `/login` page renders `<AuthForm mode="login" />` and includes a link to `/signup`
+- [ ] `/signup` page renders `<AuthForm mode="signup" />` and includes a link to `/login`
+- [ ] Layout is responsive and visually consistent on mobile, tablet, and desktop
 
-## Open Questions
+# Open Questions
 
-- Should client-side email validation occur before submission?
-- What visual feedback should indicate successful form submission (besides console logging)?
-- Should password visibility state persist if user navigates away and returns?
-- Should there be error messages displayed on the page, or just console logging for now?
-- What icon library should be used for the password toggle (lucide-react is already available)?
+- Should empty-field submission be silently ignored, or should inline validation messages be shown?
+- Is there any minimum password length to enforce client-side at this stage?
+- Should the form switching link be a Next.js `<Link>` component or a plain `<a>` tag?
+- Should the password visibility state reset when the form resets after submit?
 
 ## Testing Guidelines
 
-Create test file(s) in the `./tests` folder for the authentication form component:
+Create a test file in `./tests` for the `AuthForm` component, covering the following without going too heavy:
 
-- Form renders with correct label and button text based on mode (login vs signup)
-- Email and password inputs accept and store user input
-- Password visibility toggle switches between showing/hiding password text
-- Form submission logs correct values to console
-- Form fields clear after submission
-- Form maintains state while interacting with inputs
+- Renders email input, password input, and submit button
+- Submit button label matches the `mode` prop ("Log In" vs "Sign Up")
+- Password field is masked by default
+- Clicking the toggle changes the password field type to `text` and back to `password`
+- Submitting the form calls `console.log` with the correct email and password values
+- Both fields are empty after submission
+- Form switching link points to the correct route for each mode
