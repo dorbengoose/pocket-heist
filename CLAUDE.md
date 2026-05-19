@@ -105,3 +105,8 @@ Tests should use Testing Library best practices:
 - Tailwind classes provide styling — no separate CSS files needed unless PostCSS features are required
 - Keep components small and focused; extract logic into custom hooks when needed
 - Tests should be readable and maintainable; optimize for clarity over brevity
+
+## Checking Documentation
+
+- **important** When implementing any lib/framework-specific features, ALWAYS check the appropiate lib/framework documentation using the Context7 MCP server before
+writing any code. 
