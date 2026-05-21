@@ -1,4 +1,4 @@
-import { DocumentData, FieldValue, QueryDocumentSnapshot } from 'firebase/firestore'
+import { DocumentData, FieldValue, QueryDocumentSnapshot, Timestamp } from 'firebase/firestore'
 
 // Document — what you read from Firestore (after conversion)
 export interface Heist {
@@ -23,7 +23,7 @@ export interface CreateHeistInput {
   assignedTo: string // uid
   assignedToCodename: string
   createdAt: FieldValue // serverTimestamp()
-  deadline: FieldValue // serverTimestamp() + 48 hours
+  deadline: FieldValue | Timestamp // serverTimestamp() + 48 hours
   finalStatus: null
 }
 

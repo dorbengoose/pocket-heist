@@ -1,0 +1,49 @@
+@reference "../../app/globals.css";
+
+.form {
+  @apply flex flex-col gap-4 mt-6 mx-auto w-full max-w-md;
+}
+
+.field {
+  @apply flex flex-col gap-2;
+}
+
+.field label {
+  @apply text-sm text-body;
+}
+
+.input {
+  @apply w-full px-3 py-2 bg-lighter text-heading rounded-md border border-light;
+}
+
+.input:focus {
+  @apply outline-none border-primary;
+}
+
+.textarea {
+  @apply resize-none min-h-24;
+}
+
+.select {
+  @apply cursor-pointer;
+}
+
+.readOnlyField {
+  @apply w-full px-3 py-2 bg-light text-body rounded-md border border-light;
+}
+
+.submit {
+  @apply w-full mt-2 px-4 py-2 bg-primary text-dark font-semibold rounded-md cursor-pointer;
+}
+
+.submit:hover {
+  @apply opacity-90;
+}
+
+.submit:disabled {
+  @apply opacity-50 cursor-not-allowed;
+}
+
+.errorMessage {
+  @apply text-sm mt-2 mx-auto w-full max-w-md text-error;
+}

@@ -17,7 +17,8 @@
       "Bash(taskkill /F /IM node.exe)",
       "Bash(curl -s http://localhost:3001)",
       "Read(//tmp/**)",
-      "Bash(curl -s http://localhost:3001/_next/static/chunks/app_\\\\\\(public\\\\\\)_welcome_module_33a8aeba.css)"
+      "Bash(curl -s http://localhost:3001/_next/static/chunks/app_\\\\\\(public\\\\\\)_welcome_module_33a8aeba.css)",
+      "Bash(git checkout *)"
     ]
   },
   "enabledPlugins": {
