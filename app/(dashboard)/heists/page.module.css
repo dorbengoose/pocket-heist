@@ -1,0 +1,34 @@
+@reference "../../globals.css"
+
+.grid {
+  @apply grid gap-6 w-full;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 640px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.section {
+  @apply flex flex-col gap-4;
+}
+
+.sectionTitle {
+  @apply text-2xl font-bold text-heading;
+}
+
+.emptyState {
+  @apply text-body text-center py-8;
+}
+
+.errorMessage {
+  @apply text-red-600 text-center py-4;
+}

@@ -19,7 +19,9 @@
       "Read(//tmp/**)",
       "Bash(curl -s http://localhost:3001/_next/static/chunks/app_\\\\\\(public\\\\\\)_welcome_module_33a8aeba.css)",
       "Bash(git checkout *)",
-      "Bash(npx vitest *)"
+      "Bash(npx vitest *)",
+      "PowerShell(Get-ChildItem -Path \"E:\\\\Aprendizaje\\\\Claude Code\\\\00 Install\\\\01 Begin\" -Directory | Where-Object { $_.Name -ne \"node_modules\" } | Select-Object Name)",
+      "PowerShell(ls \"E:\\\\Aprendizaje\\\\Claude Code\\\\00 Install\\\\01 Begin\" | Where-Object { $_.Name -ne \"node_modules\" })"
     ]
   },
   "enabledPlugins": {
