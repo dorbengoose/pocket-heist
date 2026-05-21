@@ -55,3 +55,15 @@
 .switchLink:active {
   @apply opacity-90;
 }
+
+.errorMessage {
+  @apply text-sm mt-2 mx-auto w-full max-w-md text-error;
+}
+
+.successMessage {
+  @apply text-sm mt-2 mx-auto w-full max-w-md text-success font-medium;
+}
+
+.submit:disabled {
+  @apply opacity-50 cursor-not-allowed;
+}

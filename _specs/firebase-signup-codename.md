@@ -42,9 +42,9 @@ Integrate Firebase Authentication into the signup form at `app/(public)/signup/p
 
 ## Open Questions
 
-- What should happen after successful signup? Redirect to dashboard, redirect to login, or clear form and show confirmation message?
-- Should the generated codename be displayed to the user immediately after signup (e.g., in a confirmation message)?
-- How many words should be in each of the three word sets for codename generation?
+- What should happen after successful signup? Redirect to dashboard, redirect to login, or clear form and show confirmation message? redirect to login
+- Should the generated codename be displayed to the user immediately after signup (e.g., in a confirmation message)? yes
+- How many words should be in each of the three word sets for codename generation? apply as you might suggest.
 
 ## Testing Guidelines
 

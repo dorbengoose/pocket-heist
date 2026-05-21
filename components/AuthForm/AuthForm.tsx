@@ -1,8 +1,13 @@
 "use client"
 
 import { useState } from "react"
+import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { Eye, EyeOff } from "lucide-react"
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth"
+import { doc, setDoc } from "firebase/firestore"
+import { auth, db } from "@/lib/firebase"
+import { generateCodename } from "@/lib/generateCodename"
 import styles from "./AuthForm.module.css"
 
 interface AuthFormProps {
@@ -10,19 +15,84 @@ interface AuthFormProps {
 }
 
 export default function AuthForm({ mode }: AuthFormProps) {
+  const router = useRouter()
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [showPassword, setShowPassword] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [isLoading, setIsLoading] = useState(false)
+  const [successCodename, setSuccessCodename] = useState<string | null>(null)
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    console.log({ email, password })
-    setEmail("")
-    setPassword("")
-    setShowPassword(false)
+
+    if (mode === "login") {
+      // Login stub - unchanged for now
+      console.log({ email, password })
+      setEmail("")
+      setPassword("")
+      setShowPassword(false)
+      return
+    }
+
+    // Signup flow
+    try {
+      setIsLoading(true)
+      setError(null)
+
+      // Create user in Firebase Auth
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password)
+
+      // Generate codename
+      const codename = generateCodename()
+
+      // Set the codename as the user's displayName
+      await updateProfile(userCredential.user, { displayName: codename })
+
+      // Create user profile document in Firestore
+      await setDoc(doc(db, "users", userCredential.user.uid), {
+        codename,
+        id: userCredential.user.uid,
+      })
+
+      // Show success message and reset form
+      setSuccessCodename(codename)
+      setEmail("")
+      setPassword("")
+      setShowPassword(false)
+
+      // Redirect to login after 2 seconds
+      setTimeout(() => {
+        router.push("/login")
+      }, 2000)
+    } catch (err) {
+      setIsLoading(false)
+
+      // Type-safe error handling
+      const error = err as { code?: string; message?: string }
+      let errorMessage = "Something went wrong. Please try again."
+
+      if (error.code === "auth/email-already-in-use") {
+        errorMessage = "An account with that email already exists."
+      } else if (error.code === "auth/weak-password") {
+        errorMessage = "Password must be at least 6 characters."
+      } else if (error.code === "auth/network-request-failed") {
+        errorMessage = "Network error. Please check your connection and try again."
+      }
+
+      setError(errorMessage)
+    }
   }
 
-  const submitLabel = mode === "login" ? "Log In" : "Sign Up"
+  const submitLabel =
+    mode === "login"
+      ? isLoading
+        ? "Logging in..."
+        : "Log In"
+      : isLoading
+        ? "Signing up..."
+        : "Sign Up"
+
   const switchHref = mode === "login" ? "/signup" : "/login"
   const switchText =
     mode === "login"
@@ -31,6 +101,12 @@ export default function AuthForm({ mode }: AuthFormProps) {
 
   return (
     <>
+      {error && <p className={styles.errorMessage}>{error}</p>}
+      {successCodename && (
+        <p className={styles.successMessage}>
+          Your codename is {successCodename}. Redirecting to login...
+        </p>
+      )}
       <form className={styles.form} onSubmit={handleSubmit}>
         <div className={styles.field}>
           <label htmlFor="auth-email">Email</label>
@@ -62,7 +138,7 @@ export default function AuthForm({ mode }: AuthFormProps) {
             </button>
           </div>
         </div>
-        <button type="submit" className={styles.submit}>
+        <button type="submit" className={styles.submit} disabled={isLoading}>
           {submitLabel}
         </button>
       </form>
