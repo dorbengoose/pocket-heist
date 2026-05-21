@@ -1,0 +1,29 @@
+@reference "../../app/globals.css";
+
+.container {
+  @apply w-full h-screen flex items-center justify-center bg-light;
+}
+
+.content {
+  @apply flex flex-col items-center justify-center gap-6 text-center px-4;
+}
+
+.heading {
+  @apply text-4xl font-bold text-heading max-w-md;
+}
+
+.description {
+  @apply text-body text-lg max-w-md;
+}
+
+.loginButton {
+  @apply inline-flex items-center gap-2 px-6 py-3 mt-4 bg-primary text-dark font-semibold rounded-lg hover:opacity-90 transition-opacity active:opacity-80 shadow-sm;
+}
+
+.loginButton:hover {
+  @apply opacity-90;
+}
+
+.loginButton:active {
+  @apply opacity-80;
+}
