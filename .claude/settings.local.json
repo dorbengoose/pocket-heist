@@ -6,7 +6,21 @@
       "Bash(git switch *)",
       "Bash(git add *)",
       "Bash(git commit *)",
-      "Bash(npm run *)"
+      "Bash(npm run *)",
+      "Bash(curl -s http://localhost:3000)",
+      "Bash(Get-Process node *)",
+      "Bash(Stop-Process -Force -ErrorAction SilentlyContinue)",
+      "Bash(Start-Sleep -Milliseconds 500)",
+      "Bash(Remove-Item -Path \"E:\\\\Aprendizaje\\\\Claude Code\\\\00 Install\\\\01 Begin\\\\.next\\\\dev\\\\lock\" -Force -ErrorAction SilentlyContinue)",
+      "Bash(Write-Output \"Cleanup complete\")",
+      "Bash(pkill -f \"next dev\")",
+      "Bash(taskkill /F /IM node.exe)",
+      "Bash(curl -s http://localhost:3001)",
+      "Read(//tmp/**)",
+      "Bash(curl -s http://localhost:3001/_next/static/chunks/app_\\\\\\(public\\\\\\)_welcome_module_33a8aeba.css)"
     ]
+  },
+  "enabledPlugins": {
+    "frontend-design@claude-plugins-official": true
   }
 }
