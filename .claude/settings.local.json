@@ -1,7 +1,8 @@
 {
   "permissions": {
     "allow": [
-      "mcp__context7__resolve-library-id"
+      "mcp__context7__resolve-library-id",
+      "Bash(python -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(d.get\\('version','unknown'\\)\\)\")"
     ]
   }
 }
