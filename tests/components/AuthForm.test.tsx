@@ -14,6 +14,7 @@ vi.mock("@/lib/firebase", () => ({
 
 vi.mock("firebase/auth", () => ({
   createUserWithEmailAndPassword: vi.fn(),
+  signInWithEmailAndPassword: vi.fn(),
   updateProfile: vi.fn(),
 }))
 
@@ -65,8 +66,12 @@ describe("AuthForm", () => {
     expect(password).toHaveAttribute("type", "password")
   })
 
-  it("logs entered values and clears fields on submit", async () => {
-    const logSpy = vi.spyOn(console, "log").mockImplementation(() => {})
+  it("clears fields after submit in login mode", async () => {
+    const { signInWithEmailAndPassword } = await import("firebase/auth")
+    vi.mocked(signInWithEmailAndPassword).mockResolvedValue({
+      user: { uid: "user123" },
+    } as any)
+
     const user = userEvent.setup()
     render(<AuthForm mode="login" />)
 
@@ -77,14 +82,10 @@ describe("AuthForm", () => {
     await user.type(password, "secret123")
     await user.click(screen.getByRole("button", { name: "Log In" }))
 
-    expect(logSpy).toHaveBeenCalledWith({
-      email: "user@example.com",
-      password: "secret123",
+    await waitFor(() => {
+      expect(email.value).toBe("")
+      expect(password.value).toBe("")
     })
-    expect(email.value).toBe("")
-    expect(password.value).toBe("")
-
-    logSpy.mockRestore()
   })
 
   it("links to /signup in login mode", () => {
@@ -355,6 +356,145 @@ describe("AuthForm", () => {
         },
         { timeout: 3000 }
       )
+    })
+  })
+
+  describe("Login mode with Firebase", () => {
+    it("calls signInWithEmailAndPassword on submit", async () => {
+      const { signInWithEmailAndPassword } = await import("firebase/auth")
+      vi.mocked(signInWithEmailAndPassword).mockResolvedValue({
+        user: { uid: "user123" },
+      } as any)
+
+      const user = userEvent.setup()
+      render(<AuthForm mode="login" />)
+
+      await user.type(screen.getByLabelText("Email"), "user@example.com")
+      await user.type(screen.getByLabelText("Password"), "password123")
+      await user.click(screen.getByRole("button", { name: "Log In" }))
+
+      await waitFor(() => {
+        expect(signInWithEmailAndPassword).toHaveBeenCalledWith(
+          expect.anything(),
+          "user@example.com",
+          "password123"
+        )
+      })
+    })
+
+    it("disables submit button while logging in", async () => {
+      const { signInWithEmailAndPassword } = await import("firebase/auth")
+      vi.mocked(signInWithEmailAndPassword).mockReturnValue(new Promise(() => {}) as any)
+
+      const user = userEvent.setup()
+      render(<AuthForm mode="login" />)
+
+      await user.type(screen.getByLabelText("Email"), "user@example.com")
+      await user.type(screen.getByLabelText("Password"), "password123")
+      await user.click(screen.getByRole("button", { name: "Log In" }))
+
+      expect(screen.getByRole("button", { name: "Logging in..." })).toBeDisabled()
+    })
+
+    it("shows error for user-not-found", async () => {
+      const { signInWithEmailAndPassword } = await import("firebase/auth")
+      vi.mocked(signInWithEmailAndPassword).mockRejectedValue({
+        code: "auth/user-not-found",
+      })
+
+      const user = userEvent.setup()
+      render(<AuthForm mode="login" />)
+
+      await user.type(screen.getByLabelText("Email"), "nonexistent@example.com")
+      await user.type(screen.getByLabelText("Password"), "password123")
+      await user.click(screen.getByRole("button", { name: "Log In" }))
+
+      await waitFor(() => {
+        expect(screen.getByText(/No account found with this email/)).toBeInTheDocument()
+      })
+    })
+
+    it("shows error for wrong-password", async () => {
+      const { signInWithEmailAndPassword } = await import("firebase/auth")
+      vi.mocked(signInWithEmailAndPassword).mockRejectedValue({
+        code: "auth/wrong-password",
+      })
+
+      const user = userEvent.setup()
+      render(<AuthForm mode="login" />)
+
+      await user.type(screen.getByLabelText("Email"), "user@example.com")
+      await user.type(screen.getByLabelText("Password"), "wrongpassword")
+      await user.click(screen.getByRole("button", { name: "Log In" }))
+
+      await waitFor(() => {
+        expect(screen.getByText(/Incorrect password/)).toBeInTheDocument()
+      })
+    })
+
+    it("shows error for network-request-failed", async () => {
+      const { signInWithEmailAndPassword } = await import("firebase/auth")
+      vi.mocked(signInWithEmailAndPassword).mockRejectedValue({
+        code: "auth/network-request-failed",
+      })
+
+      const user = userEvent.setup()
+      render(<AuthForm mode="login" />)
+
+      await user.type(screen.getByLabelText("Email"), "user@example.com")
+      await user.type(screen.getByLabelText("Password"), "password123")
+      await user.click(screen.getByRole("button", { name: "Log In" }))
+
+      await waitFor(() => {
+        expect(screen.getByText(/Network error/)).toBeInTheDocument()
+      })
+    })
+
+    it("redirects to /heists after successful login", async () => {
+      const { useRouter } = await import("next/navigation")
+      const mockPush = vi.fn()
+      vi.mocked(useRouter).mockReturnValue({ push: mockPush } as any)
+
+      const { signInWithEmailAndPassword } = await import("firebase/auth")
+      vi.mocked(signInWithEmailAndPassword).mockResolvedValue({
+        user: { uid: "user123" },
+      } as any)
+
+      const user = userEvent.setup()
+      render(<AuthForm mode="login" />)
+
+      await user.type(screen.getByLabelText("Email"), "user@example.com")
+      await user.type(screen.getByLabelText("Password"), "password123")
+      await user.click(screen.getByRole("button", { name: "Log In" }))
+
+      await waitFor(
+        () => {
+          expect(mockPush).toHaveBeenCalledWith("/heists")
+        },
+        { timeout: 2000 }
+      )
+    })
+
+    it("clears form fields after successful login", async () => {
+      const { signInWithEmailAndPassword } = await import("firebase/auth")
+      vi.mocked(signInWithEmailAndPassword).mockResolvedValue({
+        user: { uid: "user123" },
+      } as any)
+
+      const user = userEvent.setup()
+      render(<AuthForm mode="login" />)
+
+      const emailInput = screen.getByLabelText("Email") as HTMLInputElement
+      const passwordInput = screen.getByLabelText("Password") as HTMLInputElement
+
+      await user.type(emailInput, "user@example.com")
+      await user.type(passwordInput, "password123")
+      await user.click(screen.getByRole("button", { name: "Log In" }))
+
+      await waitFor(() => {
+        expect(emailInput.value).toBe("")
+        expect(passwordInput.value).toBe("")
+      })
     })
   })
 })

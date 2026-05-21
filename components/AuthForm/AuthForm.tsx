@@ -4,7 +4,7 @@ import { useState } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { Eye, EyeOff } from "lucide-react"
-import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth"
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "firebase/auth"
 import { doc, setDoc } from "firebase/firestore"
 import { auth, db } from "@/lib/firebase"
 import { generateCodename } from "@/lib/generateCodename"
@@ -27,11 +27,39 @@ export default function AuthForm({ mode }: AuthFormProps) {
     e.preventDefault()
 
     if (mode === "login") {
-      // Login stub - unchanged for now
-      console.log({ email, password })
-      setEmail("")
-      setPassword("")
-      setShowPassword(false)
+      // Login flow
+      try {
+        setIsLoading(true)
+        setError(null)
+
+        await signInWithEmailAndPassword(auth, email, password)
+
+        // Clear form and redirect to heists
+        setEmail("")
+        setPassword("")
+        setShowPassword(false)
+
+        setTimeout(() => {
+          router.push("/heists")
+        }, 500)
+      } catch (err) {
+        setIsLoading(false)
+
+        const error = err as { code?: string; message?: string }
+        let errorMessage = "Something went wrong. Please try again."
+
+        if (error.code === "auth/invalid-email") {
+          errorMessage = "Invalid email address."
+        } else if (error.code === "auth/user-not-found") {
+          errorMessage = "No account found with this email."
+        } else if (error.code === "auth/wrong-password") {
+          errorMessage = "Incorrect password."
+        } else if (error.code === "auth/network-request-failed") {
+          errorMessage = "Network error. Please check your connection and try again."
+        }
+
+        setError(errorMessage)
+      }
       return
     }
 
