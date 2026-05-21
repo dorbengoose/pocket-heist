@@ -2,10 +2,12 @@
 
 import { Clock8 } from 'lucide-react'
 import Link from 'next/link'
+import Footer from '@/components/Footer'
 import styles from './welcome.module.css'
 
 export default function Home() {
   return (
+    <>
     <div className={styles.container}>
         {/* Animated background elements */}
         <div className={styles.floatingShapes}>
@@ -74,5 +76,7 @@ export default function Home() {
           <div className={styles.bottomAccent}></div>
         </main>
       </div>
+      <Footer />
+    </>
     )
 }
