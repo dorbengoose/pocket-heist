@@ -15,3 +15,19 @@
 svg.logo {
   display: inline-block;
 }
+
+.logoutItem {
+  @apply ml-auto flex items-center gap-2;
+}
+
+.logoutButton {
+  @apply flex items-center gap-2 px-3 py-2 text-sm font-medium text-body hover:text-heading transition-colors rounded-md border border-light hover:bg-lighter disabled:opacity-50 disabled:cursor-not-allowed;
+}
+
+.logoutButton:hover:not(:disabled) {
+  @apply bg-lighter;
+}
+
+.logoutError {
+  @apply text-error text-xs mr-2;
+}

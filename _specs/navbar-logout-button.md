@@ -38,8 +38,8 @@ Add a logout button to the Navbar component that allows authenticated users to s
 
 ## Open Questions
 
-- Should there be a confirmation dialog before logging out, or is a single click sufficient? (single click preferred for now)
-- Should the logout button show an icon, text, or both? (Vercel style uses icon + text or icon alone)
+- Should there be a confirmation dialog before logging out, or is a single click sufficient? (single click preferred for now) Single click
+- Should the logout button show an icon, text, or both? (Vercel style uses icon + text or icon alone) icon  + text
 
 ## Testing Guidelines
 
