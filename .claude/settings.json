@@ -6,13 +6,13 @@
         "hooks": [
           {
             "type": "command",
-            "command": "jq -r '.tool_input.file_path // .tool_response.filePath' | { read -r f; if [[ \"$f\" =~ \\.(ts|tsx|js|jsx|mjs)$ ]]; then npm run lint -- --fix \"$f\" 2>/dev/null; fi; }",
+            "command": "jq -r '.tool_input.file_path // .tool_response.filePath' | { read -r f; echo \"$f\" | grep -qE '\\.(ts|tsx|js|jsx|mjs)$' && npm run lint -- --fix \"$f\" 2>/dev/null || true; }",
             "statusMessage": "Formatting with ESLint...",
             "timeout": 30
           },
           {
             "type": "command",
-            "command": "jq -r '.tool_input.file_path // .tool_response.filePath' | { read -r f; if [[ \"$f\" =~ \\.(ts|tsx|js|jsx|test|spec)$ ]]; then npm run test -- \"$f\" 2>/dev/null || true; fi; }",
+            "command": "jq -r '.tool_input.file_path // .tool_response.filePath' | { read -r f; echo \"$f\" | grep -qE '\\.(ts|tsx|js|jsx|test|spec)$' && npm run test -- \"$f\" 2>/dev/null || true; }",
             "statusMessage": "Running tests...",
             "timeout": 60
           }
