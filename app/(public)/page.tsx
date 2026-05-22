@@ -2,6 +2,7 @@
 
 import { Clock8 } from 'lucide-react'
 import Link from 'next/link'
+import Badge from '@/components/Badge'
 import Footer from '@/components/Footer'
 import styles from './welcome.module.css'
 
@@ -22,6 +23,7 @@ export default function Home() {
             <div className={styles.briefingHeader}>
               <span className={styles.briefingLabel}>MISSION BRIEFING</span>
               <div className={styles.missionDivider}></div>
+              <Badge label="LIVE" variant="success" />
             </div>
 
             {/* Hero Content */}
