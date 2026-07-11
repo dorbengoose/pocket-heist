@@ -1,21 +1,26 @@
 import { readFileSync } from 'fs'
 import { join } from 'path'
+import { randomUUID } from 'crypto'
 import { initializeTestEnvironment, type RulesTestEnvironment } from '@firebase/rules-unit-testing'
 import type { Firestore } from 'firebase/firestore'
 
-const PROJECT_ID = 'demo-pocket-heist'
 const FIRESTORE_EMULATOR_PORT = 8080
 
 /**
  * Starts a RulesTestEnvironment against the running Firestore emulator
  * (`npm run emulators:start`), loaded with this repo's real firestore.rules.
  * Call once per test file, in `beforeAll`.
+ *
+ * Each call gets its own randomly suffixed `projectId` — Vitest runs test
+ * files in parallel, and a shared projectId means one file's
+ * `clearFirestore()` (in another file's `afterEach`) can wipe data an
+ * in-flight assertion in this file still needs.
  */
 export async function setupFirestoreEmulator(): Promise<RulesTestEnvironment> {
   const rules = readFileSync(join(process.cwd(), 'firestore.rules'), 'utf8')
 
   return initializeTestEnvironment({
-    projectId: PROJECT_ID,
+    projectId: `demo-pocket-heist-${randomUUID()}`,
     firestore: {
       rules,
       host: '127.0.0.1',
