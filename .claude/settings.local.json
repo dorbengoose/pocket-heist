@@ -21,7 +21,22 @@
       "Bash(git checkout *)",
       "Bash(npx vitest *)",
       "PowerShell(Get-ChildItem -Path \"E:\\\\Aprendizaje\\\\Claude Code\\\\00 Install\\\\01 Begin\" -Directory | Where-Object { $_.Name -ne \"node_modules\" } | Select-Object Name)",
-      "PowerShell(ls \"E:\\\\Aprendizaje\\\\Claude Code\\\\00 Install\\\\01 Begin\" | Where-Object { $_.Name -ne \"node_modules\" })"
+      "PowerShell(ls \"E:\\\\Aprendizaje\\\\Claude Code\\\\00 Install\\\\01 Begin\" | Where-Object { $_.Name -ne \"node_modules\" })",
+      "PowerShell(powershell -File .specify/scripts/powershell/setup-plan.ps1 -Json)",
+      "PowerShell($env:SPECIFY_FEATURE = \"002-firestore-hooks-migration\"; powershell -File .specify/scripts/powershell/setup-plan.ps1 -Json)",
+      "PowerShell($env:SPECIFY_FEATURE_DIRECTORY = \"specs/002-firestore-hooks-migration\"; powershell -File .specify/scripts/powershell/setup-plan.ps1 -Json)",
+      "PowerShell($env:SPECIFY_FEATURE_DIRECTORY = \"specs/002-firestore-hooks-migration\"; powershell -File .specify/scripts/powershell/setup-tasks.ps1 -Json)",
+      "Bash(npm install *)",
+      "Bash(npx tsc *)",
+      "Bash(java *)",
+      "PowerShell(try { & java -version 2>&1 } catch { \"NOT FOUND: $_\" })",
+      "Bash(timeout 30 npx firebase emulators:start --only firestore --project demo-pocket-heist)",
+      "PowerShell(Get-Command *)",
+      "PowerShell(winget *)",
+      "PowerShell(java *)",
+      "PowerShell(Select-String *)",
+      "Bash(npx eslint *)",
+      "Bash(echo \"EXIT=$?\")"
     ]
   },
   "enabledPlugins": {
