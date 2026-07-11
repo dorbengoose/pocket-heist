@@ -5,9 +5,9 @@ import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { Eye, EyeOff } from "lucide-react"
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "firebase/auth"
-import { doc, setDoc } from "firebase/firestore"
-import { auth, db } from "@/lib/firebase"
+import { auth } from "@/lib/firebase"
 import { generateCodename } from "@/lib/generateCodename"
+import { useCreateUserProfile } from "@/hooks/useCreateUserProfile"
 import styles from "./AuthForm.module.css"
 
 interface AuthFormProps {
@@ -16,6 +16,7 @@ interface AuthFormProps {
 
 export default function AuthForm({ mode }: AuthFormProps) {
   const router = useRouter()
+  const { createUserProfile } = useCreateUserProfile()
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [showPassword, setShowPassword] = useState(false)
@@ -78,10 +79,7 @@ export default function AuthForm({ mode }: AuthFormProps) {
       await updateProfile(userCredential.user, { displayName: codename })
 
       // Create user profile document in Firestore
-      await setDoc(doc(db, "users", userCredential.user.uid), {
-        codename,
-        id: userCredential.user.uid,
-      })
+      await createUserProfile(userCredential.user.uid, codename)
 
       // Show success message and reset form
       setSuccessCodename(codename)
