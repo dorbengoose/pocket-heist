@@ -1,28 +1,25 @@
 <!--
 SYNC IMPACT REPORT
 ==================
-Version change: 1.0.0 → 1.1.0 (new principle added — Article VI)
+Version change: 1.1.0 → 1.1.1 (PATCH — footer version field corrected)
 
-Modified principles: N/A (I-V unchanged)
+Modified principles: N/A (no principle content changed)
 
-Added sections:
-  - VI. Firestore as Sole Data Integration
+Rationale:
+  - The 1.0.0 → 1.1.0 amendment (Article VI ratification) correctly
+    documented the version bump in its own Sync Impact Report, but the
+    document footer was never updated to reflect it. Discovered during
+    governance audit (evidence: single commit in git history,
+    `51b34d7 chore(specify): establish spec-kit foundation on main`, with
+    no subsequent amendment commit).
+  - Footer correction only — no principle, article, or workflow text
+    changes. Classified as PATCH per this constitution's own versioning
+    policy ("Clarifications, wording fixes, non-semantic refinements").
 
+Added sections: N/A
 Removed sections: N/A
-
-Templates requiring updates:
-  - .specify/templates/plan-template.md ⚠ pending manual review — Constitution
-    Check section should reference Article VI where data-access decisions
-    are evaluated
-  - .specify/templates/spec-template.md ✅ No changes required
-  - .specify/templates/tasks-template.md ✅ No changes required
-
-Follow-up TODOs:
-  - [Gap] Existing violation of Article VI, bullet 3 detected at ratification
-    time in components/AuthForm/AuthForm.tsx and
-    components/CreateHeistForm/CreateHeistForm.tsx (direct firebase/firestore
-    imports outside hooks). Documented as technical debt, not blocking
-    ratification. See knowledge-base.md M8 gap log for full detail.
+Templates requiring updates: N/A
+Follow-up TODOs: N/A — this PATCH fully resolves the discrepancy.
 -->
 
 # Pocket Heist Constitution
@@ -126,4 +123,4 @@ this constitution takes precedence.
 deviations MUST be explicitly justified in the plan's Complexity Tracking table.
 See `CLAUDE.md` for runtime development guidance.
 
-**Version**: 1.0.0 | **Ratified**: 2026-07-06 | **Last Amended**: 2026-07-06
+**Version**: 1.1.1 | **Ratified**: 2026-07-06 | **Last Amended**: 2026-07-11

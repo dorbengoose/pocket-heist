@@ -9,14 +9,39 @@ Add a reusable `AuthForm` component used by both the `/login` and `/signup` page
 
 # Functional Requirements
 
-- **Email field**: Controlled text input, accepts any string, labelled "Email"
-- **Password field**: Controlled password input that masks characters by default, labelled "Password"
-- **Password visibility toggle**: Clickable icon (Eye / EyeOff from lucide-react) that toggles the password field between `type="password"` and `type="text"`
-- **Submit button**: Full-width button whose label reads "Log In" on `/login` and "Sign Up" on `/signup`
-- **Console logging on submit**: `console.log` the submitted email and password; prevent default browser form submission
-- **Form reset**: Clear both fields after the form is submitted
-- **Form switching link**: Each page shows a plain text link to the other page — `/login` shows "Don't have an account? Sign up", `/signup` shows "Already have an account? Log in"
-- **Reusable component**: A single `AuthForm` component accepts a `mode` prop (`"login"` | `"signup"`) to control button label and is used by both pages
+Email field: Controlled text input, accepts any string, labelled "Email"
+Password field: Controlled password input that masks characters by default, labelled "Password"
+Password visibility toggle: Clickable icon (Eye / EyeOff from lucide-react) that toggles the password field between type="password" and type="text"
+Submit button: Full-width button whose label reads "Log In" on /login and "Sign Up" on /signup
+[FR-AUTH-01] Authentication on submit (supersedes original console.log placeholder): In signup mode, the system MUST create an account via Firebase Auth's createUserWithEmailAndPassword. In login mode, the system MUST authenticate via signInWithEmailAndPassword.
+[FR-AUTH-02] Codename assignment (new): On successful signup, the system MUST generate a unique codename (generateCodename()) and set it as the user's displayName via updateProfile.
+[FR-AUTH-03] User profile document (new): On successful signup, the system MUST create a document in the users collection in Firestore, keyed by the user's UID, containing {codename, id}.
+[FR-AUTH-04] Error mapping (new): The system MUST map known Firebase Auth error codes (auth/invalid-email, auth/user-not-found, auth/wrong-password, auth/email-already-in-use, auth/weak-password, auth/network-request-failed) to human-readable messages. Any other error MUST show a generic fallback message.
+Form reset: Clear both fields after the form is submitted
+Form switching link: Each page shows a plain text link to the other page — /login shows "Don't have an account? Sign up", /signup shows "Already have an account? Log in"
+Reusable component: A single AuthForm component accepts a mode prop ("login" | "signup") to control button label and is used by both pages
+
+
+Console logging on submit: console.log the submitted email and password
+SUPERSEDED by FR-AUTH-01 through FR-AUTH-04 above — real authentication
+was implemented after this spec was originally written and was never
+back-documented. See reconciliation note below.
+
+Reconciliation Note (added retroactively)
+
+This spec originally described a console.log placeholder for
+authentication. The actual implementation in AuthForm.tsx has long
+since replaced that placeholder with real Firebase Auth + Firestore
+profile creation. FR-AUTH-01 through FR-AUTH-04 above document that real
+behavior so this spec is no longer a stale contract. No new behavior is
+being requested here — this is a documentation catch-up before the
+Article VI hooks-migration change spec is applied.
+
+Open Questions — resolved
+
+
+Should the form switching link be a Next.js <Link> component or a
+plain <a> tag? Resolved by evidence: the code uses next/link.*Reusable component**: A single `AuthForm` component accepts a `mode` prop (`"login"` | `"signup"`) to control button label and is used by both pages
 
 ## Figma Design Reference (only if referenced)
 
