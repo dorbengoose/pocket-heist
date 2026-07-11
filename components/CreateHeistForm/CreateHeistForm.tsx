@@ -2,10 +2,11 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { addDoc, collection, getDocs, serverTimestamp, Timestamp } from 'firebase/firestore'
-import { db } from '@/lib/firebase'
+import { serverTimestamp, Timestamp } from 'firebase/firestore'
 import { useUser } from '@/context/UserContext'
-import { COLLECTIONS, CreateHeistInput } from '@/types/firestore'
+import { useUsers } from '@/hooks/useUsers'
+import { useCreateHeist } from '@/hooks/useCreateHeist'
+import { CreateHeistInput } from '@/types/firestore'
 import styles from './CreateHeistForm.module.css'
 
 export default function CreateHeistForm() {
@@ -19,34 +20,19 @@ export default function CreateHeistForm() {
   const [assigneeCodename, setAssigneeCodename] = useState('')
 
   // Users collection data
-  const [users, setUsers] = useState<Array<{ id: string; codename: string }>>([])
-  const [isLoadingUsers, setIsLoadingUsers] = useState(true)
+  const { users, loading: isLoadingUsers, error: usersError } = useUsers()
+  const { createHeist } = useCreateHeist()
 
   // Form submission state
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  // Fetch users from Firestore on mount
   useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        setIsLoadingUsers(true)
-        const usersSnapshot = await getDocs(collection(db, COLLECTIONS.USERS))
-        const usersData = usersSnapshot.docs.map((doc) => ({
-          id: doc.id,
-          codename: doc.data().codename,
-        }))
-        setUsers(usersData)
-      } catch (err) {
-        console.error('Failed to load users:', err)
-        setError('Failed to load agents. Please refresh the page.')
-      } finally {
-        setIsLoadingUsers(false)
-      }
+    if (usersError) {
+      console.error('Failed to load users:', usersError)
+      setError('Failed to load agents. Please refresh the page.')
     }
-
-    fetchUsers()
-  }, [])
+  }, [usersError])
 
   // Calculate deadline for display (48 hours from now)
   const deadlinePreview = new Date(Date.now() + 48 * 60 * 60 * 1000).toLocaleString()
@@ -102,7 +88,7 @@ export default function CreateHeistForm() {
       }
 
       // Create document in Firestore
-      await addDoc(collection(db, COLLECTIONS.HEISTS), heistData)
+      await createHeist(heistData)
 
       // Redirect to heists page
       router.push('/heists')
